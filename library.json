@@ -1,0 +1,28 @@
+{
+	"name": "ArduinoLogger",
+	"keywords": "ArduinoLogger, Logger, Log, ArduinoLog",
+	"description": "An Arduino library for simple and clean-looking logging",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Farossco/ArduinoLogger",
+		"branch": "master"
+	},
+	"authors": [
+		{
+			"maintainer": true,
+			"name": "Farès Chati",
+			"url": "https://github.com/Farossco",
+			"email": "faresticha@gmail.com"
+		}
+	],
+	"dependencies": [
+		{
+			"name": "Time",
+			"authors": "Michael Margolis, Paul Stoffregen",
+			"frameworks": "arduino"
+		}
+	],
+	"frameworks": "arduino",
+	"platforms": "*",
+	"version": "1.0.0"
+}

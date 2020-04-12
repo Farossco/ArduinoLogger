@@ -72,7 +72,7 @@ void Logger::enable (Print & stream) const
 	LogOutput * output = getLogOutputFromStream (stream);
 
 	if (output != NULL)
-		output->level = true;
+		output->enabled = true;
 }
 
 void Logger::disable (Print & stream) const

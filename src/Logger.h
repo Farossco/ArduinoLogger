@@ -46,12 +46,30 @@ typedef struct LogOutput
 {
 	Print * stream;
 	uint8_t level;
+	uint8_t displayIndex;
 	bool    prefixOnNextPrint;
 	bool    prefixEnabled;
 	bool    dateEnabled;
 	bool    levelNameEnabled;
 	bool    enabled;
+	bool    tempDisabled;
 } LogOutput;
+
+/* Do not display prefix for the current line and specified output */
+struct npo
+{
+	Print & output;
+
+	explicit npo(Print & arg) : output (arg){ }
+};
+
+/* Disable the provided output for this line */
+struct dsb
+{
+	Print & output;
+
+	explicit dsb(Print & arg) : output (arg){ }
+};
 
 class Logger : public ostream
 {
@@ -83,10 +101,12 @@ public:
 	// Is the output enabled for the specified log level ?
 	bool isEnabled (Print & stream, int level = LOG_LEVEL_SILENT) const;
 
-	friend Logger &operator << (ostream & s, Logger& (*pf)(Logger & logger));
-	friend inline Logger& endl (Logger& logger);  /* End of line */
-	friend inline Logger& dendl (Logger& logger); /* Double end of line */
-	friend inline Logger& np (Logger& logger);    /* Do not display prefix for the current line */
+	friend Logger & operator << (ostream & s, Logger& (*pf)(Logger & logger));
+	friend Logger & operator << (Logger &os, const npo &arg);
+	friend Logger & operator << (Logger &os, const dsb &arg);
+	friend Logger & endl (Logger& logger);  /* End of line */
+	friend Logger & dendl (Logger& logger); /* Double end of line */
+	friend Logger & np (Logger& logger);    /* Do not display prefix for the current line */
 
 private:
 	void putch (char c);
@@ -107,42 +127,20 @@ private:
 	const char * debugLevelName (uint8_t debugLevel);
 	void printPrefix (uint8_t index);
 	void setPrefixOnNextPrint (bool prefixOnNextPrint) const;
+	void setNDisplayedOutputs () const;
+	void setAllDisplayIndex () const;
+	void resetTempDisabled () const;
 
 	const uint8_t _levelToOutput; // The level that needs to be output by the instance
 
 	static LogOutput * _outputs; // Ouputs array
 	static uint8_t _nOutputs;    // Outputs counter
+	static uint8_t _nDisplayed;  // Enabled outputs counter
 };
 
-inline Logger& endl (Logger& logger)
-{
-	logger.put ('\n');
-	logger.setPrefixOnNextPrint (true);
-	logger.setflags();
-
-	return logger;
-}
-
-inline Logger& dendl (Logger& logger)
-{
-	logger.put ('\n');
-	logger.put ('\n');
-	logger.setPrefixOnNextPrint (true);
-	logger.setflags();
-
-	return logger;
-}
-
-/*
- * Do not display prefix for the current line
- * Must be put in second position
- */
-inline Logger& np (Logger& logger)
-{
-	logger.setPrefixOnNextPrint (false);
-
-	return logger;
-}
+Logger& endl (Logger& logger);
+Logger& dendl (Logger& logger);
+Logger& np (Logger& logger);
 
 extern Logger err;   // Error level logging
 extern Logger warn;  // Warning level logging

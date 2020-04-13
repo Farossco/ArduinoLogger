@@ -18,6 +18,7 @@ void setup ()
 {
 	Serial.begin (9600);
 	Serial1.begin (9600);
+	Serial2.begin (9600);
 
 	logger.add (Serial, LOG_LEVEL_VERBOSE); // This will log everything on Serial
 
@@ -41,7 +42,7 @@ void setup ()
 	warn << "This is a warning message" << endl;
 	inf << "This is an info message" << endl;
 	trace << "I'm only showing up on Serial1" << endl; // This will only  be displayed on Serial1
-	verb << "I'm not displayed at all :'(" << endl;    // This will not be displayed at all
+	verb << "I'm not displayed at all :'(" << dendl;   // This will not be displayed at all
 
 	// By default, the date is displayed with the prefix,
 	// it can be disabled respectively for every output :
@@ -53,9 +54,27 @@ void setup ()
 
 	inf << "This has a full prefix again" << endl;
 
-	inf << np << "This one has no prefix at all on both outputs" << endl;
+	inf << np << "This has no prefix at all on both outputs" << endl;
 
 	inf << "And prefix is back on this one" << endl;
+
+	logger.disable (Serial1); // You can also disable an output
+
+	inf << "This does not have output counter" << endl;
+
+	logger.add (Serial2, LOG_LEVEL_VERBOSE); // You can add a third output
+
+	inf << "This has an output counter of 1|2 on Serial and 2|2 on Serial2" << endl;
+
+	logger.enable (Serial1);
+
+	inf << "This has an output counter of 1|3 on Serial, 2|3 on Serial1 and 3|3 on Serial2" << endl;
+
+	inf << npo (Serial) << "This has no prefix on Serial only" << endl;
+
+	inf << dsb (Serial) << "This is disabled for Serial for this line" << endl;
+
+	inf << "This is disabled on all outputs" << endl;
 } // setup
 
 void loop ()
@@ -74,8 +93,13 @@ void loop ()
  * [00/00/1970 00:00:00::433] [1|2] [ INFO  ] This is an info message
  * [1|2] [ INFO  ] This is displayed with no date on Serial
  * [00/00/1970 00:00:00::667] [1|2] [ INFO  ] This has a full prefix again
- * This one has no prefix at all on both outputs
- * [00/00/1970 00:00:00::790] [1|2] [ INFO  ] And prefix is back on this one
+ * This has no prefix at all on both outputs
+ * [00/00/1970 00:00:00::785] [1|2] [ INFO  ] And prefix is back on this one
+ * [00/00/1970 00:00:00::863] [ INFO  ] This does not have output counter
+ * [00/00/1970 00:00:00::870] [1|2] [ INFO  ] This has an output counter of 1|2 on Serial and 2|2 on Serial2
+ * [01/01/1970 00:00:01::020] [1|3] [ INFO  ] This has an output counter of 1|3 on Serial, 2|3 on Serial1 and 3|3 on Serial2
+ * This has no prefix on Serial only
+ * [01/01/1970 00:00:01::391] [1|3] [ INFO  ] This is disabled on all outputs
  *
  *
  ** Output on Serial1 :
@@ -92,7 +116,19 @@ void loop ()
  * [00/00/1970 00:00:00::503] [2|2] [ TRACE ] I'm only showing up on Serial1
  * [00/00/1970 00:00:00::580] [2|2] [ INFO  ] This is displayed with no date on Serial
  * [00/00/1970 00:00:00::673] [2|2] [ INFO  ] This has a full prefix again
- * This one has no prefix at all on both outputs
- * [00/00/1970 00:00:00::798] [2|2] [ INFO  ] And prefix is back on this one
+ * This has no prefix at all on both outputs
+ * [00/00/1970 00:00:00::794] [2|2] [ INFO  ] And prefix is back on this one
+ * [01/01/1970 00:00:01::104] [2|3] [ INFO  ] This has an output counter of 1|3 on Serial, 2|3 on Serial1 and 3|3 on Serial2
+ * [01/01/1970 00:00:01::222] [2|3] [ INFO  ] This has no prefix on Serial only
+ * [01/01/1970 00:00:01::302] [2|3] [ INFO  ] This is disabled for Serial for this line
+ * [01/01/1970 00:00:01::400] [2|3] [ INFO  ] This is disabled on all outputs
  *
+ *
+ ** Output on Serial2 :
+ *
+ * [00/00/1970 00:00:00::977] [2|2] [ INFO  ] This has an output counter of 1|2 on Serial and 2|2 on Serial2
+ * [01/01/1970 00:00:01::163] [3|3] [ INFO  ] This has an output counter of 1|3 on Serial, 2|3 on Serial1 and 3|3 on Serial2
+ * [01/01/1970 00:00:01::243] [3|3] [ INFO  ] This has no prefix on Serial only
+ * [01/01/1970 00:00:01::332] [3|3] [ INFO  ] This is disabled for Serial for this line
+ * [01/01/1970 00:00:01::410] [3|3] [ INFO  ] This is disabled on all outputs
  */

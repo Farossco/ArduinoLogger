@@ -18,7 +18,8 @@ This library allows you to easily add logging to your program. It is mainly made
 
 ## Installation
 ### PlatformIO
-This library is available on the PlatformIO package manager
+This library is available on the PlatformIO package manager.
+
 To install it, simply add it to your `platformio.ini` file under `lib_deps`
 
 Example :
@@ -45,7 +46,7 @@ The library folder is usually under :
 
 ## Usage
 
-This library is made to be very simple to use. To initialize the logger for an output, you need to provide the output and the log level (Info by default)
+This library is made to be very simple to use. To initialize the logger for an output, you need to provide the output and the log level.
 
 If you're using a Serial as your output, you still need to call `Serial.begin()`
 

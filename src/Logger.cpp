@@ -27,6 +27,7 @@
 
 LogOutput * Logger::_outputs = NULL;
 uint8_t Logger::_nOutputs    = 0;
+uint8_t Logger::_nDisplayed  = 0;
 
 Logger::Logger() : _levelToOutput (LOG_LEVEL_SILENT)
 { }
@@ -45,17 +46,15 @@ void Logger::add (Print & stream, uint8_t level, bool prefixEnabled, bool dateEn
 		edit (stream, level, prefixEnabled, dateEnabled, levelNameEnabled);
 	else
 	{
-		_outputs = new LogOutput[_nOutputs + 1]; // Creating a new array with one more item
+		_outputs = new LogOutput[++_nOutputs]; // Incrementing the counter and creating a new array with one more item
 
 		// Copying the existing array
-		for (int i = 0; i < _nOutputs; i++)
+		for (int i = 0; i < _nOutputs - 1; i++)
 			_outputs[i] = oldOutputs[i];
 
 		delete oldOutputs; // Then, removing the old array
 
-		initLogOutput (&_outputs[_nOutputs], stream, level, prefixEnabled, dateEnabled, levelNameEnabled); // Initializing the new item
-
-		_nOutputs++; // Incrementing the counter
+		initLogOutput (&_outputs[_nOutputs - 1], stream, level, prefixEnabled, dateEnabled, levelNameEnabled); // Initializing the new item
 	}
 }
 
@@ -73,6 +72,9 @@ void Logger::enable (Print & stream) const
 
 	if (output != NULL)
 		output->enabled = true;
+
+	setAllDisplayIndex();
+	setNDisplayedOutputs();
 }
 
 void Logger::disable (Print & stream) const
@@ -81,6 +83,9 @@ void Logger::disable (Print & stream) const
 
 	if (output != NULL)
 		output->enabled = false;
+
+	setAllDisplayIndex();
+	setNDisplayedOutputs();
 }
 
 void Logger::enablePrefix (Print & stream) const
@@ -171,6 +176,10 @@ void Logger::initLogOutput (LogOutput * output, Print & stream, uint8_t level, b
 	output->dateEnabled       = true;
 	output->levelNameEnabled  = true;
 	output->enabled           = true;
+	output->tempDisabled      = false;
+
+	setAllDisplayIndex();
+	setNDisplayedOutputs();
 }
 
 void Logger::setflags ()
@@ -178,13 +187,54 @@ void Logger::setflags ()
 	flags (dec | right | skipws | showbase | uppercase | boolalpha);
 }
 
-/** Output string
- * \param[in] arg string to output
- * \return the stream
- */
 Logger &operator << (ostream & s, Logger& (*pf)(Logger & logger))
 {
 	return pf ((Logger&) s);
+}
+
+Logger &operator << (Logger &os, const npo &arg)
+{
+	LogOutput * output = os.getLogOutputFromStream (arg.output);
+
+	if (output != NULL)
+		output->prefixOnNextPrint = false;
+
+	return os;
+}
+
+Logger &operator << (Logger &os, const dsb &arg)
+{
+	LogOutput * output = os.getLogOutputFromStream (arg.output);
+
+	if (output != NULL)
+		output->tempDisabled = true;
+
+	return os;
+}
+
+Logger& endl (Logger& logger)
+{
+	logger.put ('\n');
+	logger.setPrefixOnNextPrint (true);
+	logger.setflags();
+	logger.resetTempDisabled();
+
+	return logger;
+}
+
+Logger& dendl (Logger& logger)
+{
+	logger.put ('\n');
+
+	return endl (logger);
+}
+
+Logger& np (Logger& logger)
+{
+	logger.setPrefixOnNextPrint (false);
+
+	logger << setfill (1);
+	return logger;
 }
 
 void Logger::putch (char c)
@@ -201,7 +251,7 @@ void Logger::putstr (const char * str)
 {
 	for (uint8_t i = 0; i < _nOutputs; i++)
 	{
-		if (_outputs[i].enabled && _outputs[i].level >= _levelToOutput)
+		if (!_outputs[i].tempDisabled && _outputs[i].enabled && _outputs[i].level >= _levelToOutput)
 		{
 			printPrefix (i);
 			_outputs[i].stream->write (str);
@@ -236,7 +286,7 @@ void Logger::printPrefix (uint8_t index)
 {
 	LogOutput * output = &_outputs[index];
 
-	if (output->prefixOnNextPrint)
+	if (output->prefixEnabled && output->prefixOnNextPrint)
 	{
 		Print * stream = output->stream;
 
@@ -247,18 +297,18 @@ void Logger::printPrefix (uint8_t index)
 			stream->print (F ("] "));
 		}
 
-		if (_nOutputs > 1)
+		if (_nDisplayed > 1)
 		{
-			stream->print ("[");
-			stream->print (index + 1);
-			stream->print ("|");
-			stream->print (_nOutputs);
+			stream->print (F ("["));
+			stream->print (_outputs[index].displayIndex);
+			stream->print (F ("|"));
+			stream->print (_nDisplayed);
 			stream->print (F ("] "));
 		}
 
 		if (output->levelNameEnabled)
 		{
-			stream->print ("[");
+			stream->print (F ("["));
 			stream->print (debugLevelName (_levelToOutput));
 			stream->print (F ("] "));
 		}
@@ -271,6 +321,30 @@ void Logger::setPrefixOnNextPrint (bool prefixOnNextPrint) const
 {
 	for (uint8_t i = 0; i < _nOutputs; i++)
 		_outputs[i].prefixOnNextPrint = prefixOnNextPrint;
+}
+
+void Logger::setNDisplayedOutputs () const
+{
+	_nDisplayed = 0;
+
+	for (uint8_t i = 0; i < _nOutputs; i++)
+		if (_outputs[i].enabled)
+			_nDisplayed++;
+}
+
+void Logger::setAllDisplayIndex () const
+{
+	uint8_t n = 0;
+
+	for (uint8_t i = 0; i <= _nOutputs; i++)
+		if (_outputs[i].enabled)
+			_outputs[i].displayIndex = ++n;
+}
+
+void Logger::resetTempDisabled () const
+{
+	for (uint8_t i = 0; i < _nOutputs; i++)
+		_outputs[i].tempDisabled = false;
 }
 
 const char * Logger::debugLevelName (uint8_t debugLevel)

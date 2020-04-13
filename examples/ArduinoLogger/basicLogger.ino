@@ -51,3 +51,20 @@ void setup ()
 
 void loop ()
 { }
+
+/** Output :
+ *
+ * [00/00/1970 00:00:00::000] [ ERROR ] This is an error message
+ * [00/00/1970 00:00:00::001] [WARNING] This is a warning message
+ * [00/00/1970 00:00:00::064] [ INFO  ] This is an info message
+ * [00/00/1970 00:00:00::126] [ TRACE ] This is a trace message
+ * [00/00/1970 00:00:00::190] [VERBOSE] This is a verbose message
+ *
+ * [00/00/1970 00:00:00::257] [ ERROR ] This is an error message
+ * [00/00/1970 00:00:00::321] [WARNING] This is a warning message
+ * [00/00/1970 00:00:00::387] [ INFO  ] This is an info message
+ * [ INFO  ] This is displayed with no date
+ * [00/00/1970 00:00:00::493] [ INFO  ] This has a full prefix again
+ * This one has no prefix at all
+ * [00/00/1970 00:00:00::592] [ INFO  ] And prefix is back on this one
+ */

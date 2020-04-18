@@ -71,11 +71,11 @@ struct dsb
 	explicit dsb(Print & arg) : output (arg){ }
 };
 
-class Logger : public ostream
+class ArduinoLogger : public ostream
 {
 public:
-	Logger();
-	Logger(uint8_t levelToOutput);
+	ArduinoLogger();
+	ArduinoLogger(uint8_t levelToOutput);
 
 	// Add an output
 	void add (Print & stream, uint8_t level,
@@ -101,12 +101,12 @@ public:
 	// Is the output enabled for the specified log level ?
 	bool isEnabled (Print & stream, int level = LOG_LEVEL_SILENT) const;
 
-	friend Logger & operator << (ostream & s, Logger& (*pf)(Logger & logger));
-	friend Logger & operator << (Logger &os, const npo &arg);
-	friend Logger & operator << (Logger &os, const dsb &arg);
-	friend Logger & endl (Logger& logger);  /* End of line */
-	friend Logger & dendl (Logger& logger); /* Double end of line */
-	friend Logger & np (Logger& logger);    /* Do not display prefix for the current line */
+	friend ArduinoLogger & operator << (ostream & s, ArduinoLogger& (*pf)(ArduinoLogger & logger));
+	friend ArduinoLogger & operator << (ArduinoLogger &os, const npo &arg);
+	friend ArduinoLogger & operator << (ArduinoLogger &os, const dsb &arg);
+	friend ArduinoLogger & endl (ArduinoLogger& logger);  /* End of line */
+	friend ArduinoLogger & dendl (ArduinoLogger& logger); /* Double end of line */
+	friend ArduinoLogger & np (ArduinoLogger& logger);    /* Do not display prefix for the current line */
 
 private:
 	void putch (char c);
@@ -139,15 +139,15 @@ private:
 	char clock[30]; // 00/00/1970 00:00:00::000
 };
 
-Logger& endl (Logger& logger);
-Logger& dendl (Logger& logger);
-Logger& np (Logger& logger);
+ArduinoLogger& endl (ArduinoLogger& logger);
+ArduinoLogger& dendl (ArduinoLogger& logger);
+ArduinoLogger& np (ArduinoLogger& logger);
 
-extern Logger err;   // Error level logging
-extern Logger warn;  // Warning level logging
-extern Logger inf;   // Info level logging
-extern Logger trace; // Trace level logging
-extern Logger verb;  // Verbose level logging
-extern const Logger logger;
+extern ArduinoLogger err;   // Error level logging
+extern ArduinoLogger warn;  // Warning level logging
+extern ArduinoLogger inf;   // Info level logging
+extern ArduinoLogger trace; // Trace level logging
+extern ArduinoLogger verb;  // Verbose level logging
+extern const ArduinoLogger logger;
 
 #endif // ifndef LOGGER_H

@@ -23,21 +23,21 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "Logger.h"
+#include "ArduinoLogger.h"
 
-LogOutput * Logger::_outputs = NULL;
-uint8_t Logger::_nOutputs    = 0;
-uint8_t Logger::_nDisplayed  = 0;
+LogOutput * ArduinoLogger::_outputs = NULL;
+uint8_t ArduinoLogger::_nOutputs    = 0;
+uint8_t ArduinoLogger::_nDisplayed  = 0;
 
-Logger::Logger() : _levelToOutput (LOG_LEVEL_SILENT)
+ArduinoLogger::ArduinoLogger() : _levelToOutput (LOG_LEVEL_SILENT)
 { }
 
-Logger::Logger (uint8_t levelToOutput) : _levelToOutput (levelToOutput)
+ArduinoLogger::ArduinoLogger (uint8_t levelToOutput) : _levelToOutput (levelToOutput)
 {
 	setflags();
 }
 
-void Logger::add (Print & stream, uint8_t level, bool prefixEnabled, bool dateEnabled, bool levelNameEnabled) const
+void ArduinoLogger::add (Print & stream, uint8_t level, bool prefixEnabled, bool dateEnabled, bool levelNameEnabled) const
 {
 	LogOutput * oldOutputs = _outputs;
 
@@ -58,7 +58,7 @@ void Logger::add (Print & stream, uint8_t level, bool prefixEnabled, bool dateEn
 	}
 }
 
-void Logger::edit (Print & stream, uint8_t level, bool prefixEnabled, bool dateEnabled, bool levelNameEnabled) const
+void ArduinoLogger::edit (Print & stream, uint8_t level, bool prefixEnabled, bool dateEnabled, bool levelNameEnabled) const
 {
 	LogOutput * output = getLogOutputFromStream (stream);
 
@@ -66,7 +66,7 @@ void Logger::edit (Print & stream, uint8_t level, bool prefixEnabled, bool dateE
 		initLogOutput (output, stream, level, prefixEnabled, dateEnabled, levelNameEnabled);
 }
 
-void Logger::enable (Print & stream) const
+void ArduinoLogger::enable (Print & stream) const
 {
 	LogOutput * output = getLogOutputFromStream (stream);
 
@@ -77,7 +77,7 @@ void Logger::enable (Print & stream) const
 	setNDisplayedOutputs();
 }
 
-void Logger::disable (Print & stream) const
+void ArduinoLogger::disable (Print & stream) const
 {
 	LogOutput * output = getLogOutputFromStream (stream);
 
@@ -88,7 +88,7 @@ void Logger::disable (Print & stream) const
 	setNDisplayedOutputs();
 }
 
-void Logger::enablePrefix (Print & stream) const
+void ArduinoLogger::enablePrefix (Print & stream) const
 {
 	LogOutput * output = getLogOutputFromStream (stream);
 
@@ -98,7 +98,7 @@ void Logger::enablePrefix (Print & stream) const
 	output->prefixEnabled = true;
 }
 
-void Logger::enableDate (Print & stream) const
+void ArduinoLogger::enableDate (Print & stream) const
 {
 	LogOutput * output = getLogOutputFromStream (stream);
 
@@ -108,7 +108,7 @@ void Logger::enableDate (Print & stream) const
 	output->dateEnabled = true;
 }
 
-void Logger::enableLevelName (Print & stream) const
+void ArduinoLogger::enableLevelName (Print & stream) const
 {
 	LogOutput * output = getLogOutputFromStream (stream);
 
@@ -118,7 +118,7 @@ void Logger::enableLevelName (Print & stream) const
 	output->levelNameEnabled = true;
 }
 
-void Logger::disablePrefix (Print & stream) const
+void ArduinoLogger::disablePrefix (Print & stream) const
 {
 	LogOutput * output = getLogOutputFromStream (stream);
 
@@ -128,7 +128,7 @@ void Logger::disablePrefix (Print & stream) const
 	output->prefixEnabled = false;
 }
 
-void Logger::disableDate (Print & stream) const
+void ArduinoLogger::disableDate (Print & stream) const
 {
 	LogOutput * output = getLogOutputFromStream (stream);
 
@@ -138,7 +138,7 @@ void Logger::disableDate (Print & stream) const
 	output->dateEnabled = false;
 }
 
-void Logger::disableLevelName (Print & stream) const
+void ArduinoLogger::disableLevelName (Print & stream) const
 {
 	LogOutput * output = getLogOutputFromStream (stream);
 
@@ -148,7 +148,7 @@ void Logger::disableLevelName (Print & stream) const
 	output->levelNameEnabled = false;
 }
 
-bool Logger::isEnabled (Print & stream, int level) const
+bool ArduinoLogger::isEnabled (Print & stream, int level) const
 {
 	LogOutput * output = getLogOutputFromStream (stream);
 
@@ -158,7 +158,7 @@ bool Logger::isEnabled (Print & stream, int level) const
 	return output->enabled && output->level >= level;
 }
 
-LogOutput * Logger::getLogOutputFromStream (Print & stream) const
+LogOutput * ArduinoLogger::getLogOutputFromStream (Print & stream) const
 {
 	for (uint8_t i = 0; i < _nOutputs; i++)
 		if (_outputs[i].stream == &stream)
@@ -167,7 +167,7 @@ LogOutput * Logger::getLogOutputFromStream (Print & stream) const
 	return NULL;
 }
 
-void Logger::initLogOutput (LogOutput * output, Print & stream, uint8_t level, bool prefixEnabled, bool dateEnabled, bool levelNameEnabled) const
+void ArduinoLogger::initLogOutput (LogOutput * output, Print & stream, uint8_t level, bool prefixEnabled, bool dateEnabled, bool levelNameEnabled) const
 {
 	output->stream            = &stream;
 	output->level             = constrain (level, LOG_LEVEL_SILENT, LOG_LEVEL_VERBOSE);
@@ -182,17 +182,17 @@ void Logger::initLogOutput (LogOutput * output, Print & stream, uint8_t level, b
 	setNDisplayedOutputs();
 }
 
-void Logger::setflags ()
+void ArduinoLogger::setflags ()
 {
 	flags (dec | right | skipws | showbase | uppercase | boolalpha);
 }
 
-Logger &operator << (ostream & s, Logger& (*pf)(Logger & logger))
+ArduinoLogger &operator << (ostream & s, ArduinoLogger& (*pf)(ArduinoLogger & logger))
 {
-	return pf ((Logger&) s);
+	return pf ((ArduinoLogger&) s);
 }
 
-Logger &operator << (Logger &os, const npo &arg)
+ArduinoLogger &operator << (ArduinoLogger &os, const npo &arg)
 {
 	LogOutput * output = os.getLogOutputFromStream (arg.output);
 
@@ -202,7 +202,7 @@ Logger &operator << (Logger &os, const npo &arg)
 	return os;
 }
 
-Logger &operator << (Logger &os, const dsb &arg)
+ArduinoLogger &operator << (ArduinoLogger &os, const dsb &arg)
 {
 	LogOutput * output = os.getLogOutputFromStream (arg.output);
 
@@ -212,7 +212,7 @@ Logger &operator << (Logger &os, const dsb &arg)
 	return os;
 }
 
-Logger& endl (Logger& logger)
+ArduinoLogger& endl (ArduinoLogger& logger)
 {
 	logger.put ('\n');
 	logger.setPrefixOnNextPrint (true);
@@ -222,14 +222,14 @@ Logger& endl (Logger& logger)
 	return logger;
 }
 
-Logger& dendl (Logger& logger)
+ArduinoLogger& dendl (ArduinoLogger& logger)
 {
 	logger.put ('\n');
 
 	return endl (logger);
 }
 
-Logger& np (Logger& logger)
+ArduinoLogger& np (ArduinoLogger& logger)
 {
 	logger.setPrefixOnNextPrint (false);
 
@@ -237,7 +237,7 @@ Logger& np (Logger& logger)
 	return logger;
 }
 
-void Logger::putch (char c)
+void ArduinoLogger::putch (char c)
 {
 	char str[2];
 
@@ -247,7 +247,7 @@ void Logger::putch (char c)
 	putstr (str);
 }
 
-void Logger::putstr (const char * str)
+void ArduinoLogger::putstr (const char * str)
 {
 	for (uint8_t i = 0; i < _nOutputs; i++)
 	{
@@ -259,30 +259,30 @@ void Logger::putstr (const char * str)
 	}
 }
 
-bool Logger::seekoff (off_type off, seekdir way)
+bool ArduinoLogger::seekoff (off_type off, seekdir way)
 {
 	(void) off;
 	(void) way;
 	return false;
 }
 
-bool Logger::seekpos (pos_type pos)
+bool ArduinoLogger::seekpos (pos_type pos)
 {
 	(void) pos;
 	return false;
 }
 
-bool Logger::Logger::sync ()
+bool ArduinoLogger::ArduinoLogger::sync ()
 {
 	return true;
 }
 
-Logger::pos_type Logger::tellpos ()
+ArduinoLogger::pos_type ArduinoLogger::tellpos ()
 {
 	return 0;
 }
 
-void Logger::printPrefix (uint8_t index)
+void ArduinoLogger::printPrefix (uint8_t index)
 {
 	LogOutput * output = &_outputs[index];
 
@@ -315,15 +315,15 @@ void Logger::printPrefix (uint8_t index)
 
 		output->prefixOnNextPrint = false;
 	}
-} // Logger::printPrefix
+} // ArduinoLogger::printPrefix
 
-void Logger::setPrefixOnNextPrint (bool prefixOnNextPrint) const
+void ArduinoLogger::setPrefixOnNextPrint (bool prefixOnNextPrint) const
 {
 	for (uint8_t i = 0; i < _nOutputs; i++)
 		_outputs[i].prefixOnNextPrint = prefixOnNextPrint;
 }
 
-void Logger::setNDisplayedOutputs () const
+void ArduinoLogger::setNDisplayedOutputs () const
 {
 	_nDisplayed = 0;
 
@@ -332,7 +332,7 @@ void Logger::setNDisplayedOutputs () const
 			_nDisplayed++;
 }
 
-void Logger::setAllDisplayIndex () const
+void ArduinoLogger::setAllDisplayIndex () const
 {
 	uint8_t n = 0;
 
@@ -341,13 +341,13 @@ void Logger::setAllDisplayIndex () const
 			_outputs[i].displayIndex = ++n;
 }
 
-void Logger::resetTempDisabled () const
+void ArduinoLogger::resetTempDisabled () const
 {
 	for (uint8_t i = 0; i < _nOutputs; i++)
 		_outputs[i].tempDisabled = false;
 }
 
-const char * Logger::debugLevelName (uint8_t debugLevel)
+const char * ArduinoLogger::debugLevelName (uint8_t debugLevel)
 {
 	switch (debugLevel)
 	{
@@ -371,16 +371,16 @@ const char * Logger::debugLevelName (uint8_t debugLevel)
 	}
 }
 
-char * Logger::getClock ()
+char * ArduinoLogger::getClock ()
 {
 	sprintf (clock, "%.2d/%.2d/%.4d %.2d:%.2d:%.2d::%.3ld", day(), month(), year(), hour(), minute(), second(), (millis() % 1000));
 
 	return clock;
 }
 
-Logger err   (LOG_LEVEL_ERROR);
-Logger warn  (LOG_LEVEL_WARNING);
-Logger inf   (LOG_LEVEL_INFO);
-Logger trace (LOG_LEVEL_TRACE);
-Logger verb  (LOG_LEVEL_VERBOSE);
-const Logger logger;
+ArduinoLogger err   (LOG_LEVEL_ERROR);
+ArduinoLogger warn  (LOG_LEVEL_WARNING);
+ArduinoLogger inf   (LOG_LEVEL_INFO);
+ArduinoLogger trace (LOG_LEVEL_TRACE);
+ArduinoLogger verb  (LOG_LEVEL_VERBOSE);
+const ArduinoLogger logger;

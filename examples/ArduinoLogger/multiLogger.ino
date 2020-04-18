@@ -12,7 +12,7 @@
  */
 
 #include <Arduino.h>
-#include <Logger.h>
+#include <ArduinoLogger.h>
 
 void setup ()
 {

@@ -9,7 +9,7 @@ This library allows you to easily add logging to your program. It is mainly made
 * Several log levels (Error, Warning, Info, Trace, Verbose)
 * Multi-output: Logs the message on several outputs at once
 * Logging using the iostream style (`<<`)
-* Supports all kind of Print output (File handling coming soon)
+* Supports all kind of Print output
 * Displays a prefix with a clock and the logging level (Configurable)
 
 ## Tested for

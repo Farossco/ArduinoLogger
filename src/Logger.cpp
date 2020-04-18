@@ -293,7 +293,7 @@ void Logger::printPrefix (uint8_t index)
 		if (output->dateEnabled)
 		{
 			stream->print (F ("["));
-			stream->print (clock());
+			stream->print (getClock());
 			stream->print (F ("] "));
 		}
 
@@ -371,13 +371,11 @@ const char * Logger::debugLevelName (uint8_t debugLevel)
 	}
 }
 
-String Logger::clock ()
+char * Logger::getClock ()
 {
-	char buf[25];
+	sprintf (clock, "%.2d/%.2d/%.4d %.2d:%.2d:%.2d::%.3ld", day(), month(), year(), hour(), minute(), second(), (millis() % 1000));
 
-	sprintf (buf, "%.2d/%.2d/%.4d %.2d:%.2d:%.2d::%.3ld", day(), month(), year(), hour(), minute(), second(), (millis() % 1000));
-
-	return buf;
+	return clock;
 }
 
 Logger err   (LOG_LEVEL_ERROR);

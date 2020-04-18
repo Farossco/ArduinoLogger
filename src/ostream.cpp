@@ -229,6 +229,10 @@ void ostream::putNum (uint32_t n, bool neg)
 		{
 			*--str = 'x';
 		}
+		else if (flags() & bin)
+		{
+			*--str = 'b';
+		}
 		*--str = '0';
 	}
 	uint8_t len  = end - str;

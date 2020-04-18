@@ -117,7 +117,7 @@ private:
 	pos_type tellpos ();
 	void setflags ();
 
-	String clock ();
+	char * getClock ();
 	LogOutput * getLogOutputFromStream (Print & stream) const;
 	void initLogOutput (LogOutput * output, Print & stream, uint8_t level,
 	  bool prefixEnabled,
@@ -136,6 +136,7 @@ private:
 	static LogOutput * _outputs; // Ouputs array
 	static uint8_t _nOutputs;    // Outputs counter
 	static uint8_t _nDisplayed;  // Enabled outputs counter
+	char clock[30]; // 00/00/1970 00:00:00::000
 };
 
 Logger& endl (Logger& logger);

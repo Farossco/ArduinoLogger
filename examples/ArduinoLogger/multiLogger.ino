@@ -36,12 +36,12 @@ void setup ()
 	verb << "This is a verbose message" << dendl; // Double end of line
 
 	logger.edit (Serial, LOG_LEVEL_INFO);   // This will log info messages and bellow
-	logger.edit (Serial1, LOG_LEVEL_TRACE); // This will log info messages and bellow
+	logger.edit (Serial1, LOG_LEVEL_TRACE); // This will log trace messages and bellow
 
 	err << "This is an error message" << endl;
 	warn << "This is a warning message" << endl;
 	inf << "This is an info message" << endl;
-	trace << "I'm only showing up on Serial1" << endl; // This will only  be displayed on Serial1
+	trace << "I'm only showing up on Serial1" << endl; // This will only be displayed on Serial1
 	verb << "I'm not displayed at all :'(" << dendl;   // This will not be displayed at all
 
 	// By default, the date is displayed with the prefix,

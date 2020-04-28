@@ -240,6 +240,17 @@ ArduinoLogger & np (ArduinoLogger & logger)
 	return logger;
 }
 
+// Carriage return
+ArduinoLogger & cr (ArduinoLogger & logger)
+{
+	logger.put ('\r');
+	logger.setPrefixOnNextPrint (true);
+	logger.setflags();
+	logger.resetTempDisabled();
+
+	return logger;
+}
+
 void ArduinoLogger::putch (char c)
 {
 	char str[2];

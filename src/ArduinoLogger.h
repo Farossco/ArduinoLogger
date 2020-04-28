@@ -107,6 +107,7 @@ public:
 	friend ArduinoLogger & endl (ArduinoLogger & logger);  // End of line
 	friend ArduinoLogger & dendl (ArduinoLogger & logger); // Double end of line
 	friend ArduinoLogger & np (ArduinoLogger & logger);    // Do not display prefix for the current line
+	friend ArduinoLogger & cr (ArduinoLogger & logger);    // Carriage return
 
 private:
 	void putch (char c);
@@ -142,6 +143,7 @@ private:
 ArduinoLogger & endl (ArduinoLogger & logger);  // End of line
 ArduinoLogger & dendl (ArduinoLogger & logger); // Double end of line
 ArduinoLogger & np (ArduinoLogger & logger);    // Do not display prefix for the current line
+ArduinoLogger & cr (ArduinoLogger & logger);    // Carriage return
 
 extern ArduinoLogger err;   // Error level logging
 extern ArduinoLogger warn;  // Warning level logging

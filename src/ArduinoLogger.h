@@ -55,7 +55,7 @@ typedef struct LogOutput
 	bool    tempDisabled;
 } LogOutput;
 
-/* Do not display prefix for the current line and specified output */
+// Do not display prefix for the current line and specified output
 struct npo
 {
 	Print & output;
@@ -63,7 +63,7 @@ struct npo
 	explicit npo(Print & arg) : output (arg){ }
 };
 
-/* Disable the provided output for this line */
+// Disable the provided output for this line
 struct dsb
 {
 	Print & output;
@@ -101,12 +101,12 @@ public:
 	// Is the output enabled for the specified log level ?
 	bool isEnabled (Print & stream, int level = LOG_LEVEL_SILENT) const;
 
-	friend ArduinoLogger & operator << (ostream & s, ArduinoLogger& (*pf)(ArduinoLogger & logger));
-	friend ArduinoLogger & operator << (ArduinoLogger &os, const npo &arg);
-	friend ArduinoLogger & operator << (ArduinoLogger &os, const dsb &arg);
-	friend ArduinoLogger & endl (ArduinoLogger& logger);  /* End of line */
-	friend ArduinoLogger & dendl (ArduinoLogger& logger); /* Double end of line */
-	friend ArduinoLogger & np (ArduinoLogger& logger);    /* Do not display prefix for the current line */
+	friend ArduinoLogger & operator << (ostream & s, ArduinoLogger & (*pf)(ArduinoLogger & logger));
+	friend ArduinoLogger & operator << (ArduinoLogger & os, const npo & arg);
+	friend ArduinoLogger & operator << (ArduinoLogger & os, const dsb & arg);
+	friend ArduinoLogger & endl (ArduinoLogger & logger);  // End of line
+	friend ArduinoLogger & dendl (ArduinoLogger & logger); // Double end of line
+	friend ArduinoLogger & np (ArduinoLogger & logger);    // Do not display prefix for the current line
 
 private:
 	void putch (char c);
@@ -136,12 +136,12 @@ private:
 	static LogOutput * _outputs; // Ouputs array
 	static uint8_t _nOutputs;    // Outputs counter
 	static uint8_t _nDisplayed;  // Enabled outputs counter
-	char clock[30]; // 00/00/1970 00:00:00::000
+	char clock[30];              // 00/00/1970 00:00:00::000
 };
 
-ArduinoLogger& endl (ArduinoLogger& logger);
-ArduinoLogger& dendl (ArduinoLogger& logger);
-ArduinoLogger& np (ArduinoLogger& logger);
+ArduinoLogger & endl (ArduinoLogger & logger);  // End of line
+ArduinoLogger & dendl (ArduinoLogger & logger); // Double end of line
+ArduinoLogger & np (ArduinoLogger & logger);    // Do not display prefix for the current line
 
 extern ArduinoLogger err;   // Error level logging
 extern ArduinoLogger warn;  // Warning level logging

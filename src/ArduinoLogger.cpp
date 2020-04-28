@@ -187,12 +187,12 @@ void ArduinoLogger::setflags ()
 	flags (dec | right | skipws | showbase | uppercase | boolalpha);
 }
 
-ArduinoLogger &operator << (ostream & s, ArduinoLogger& (*pf)(ArduinoLogger & logger))
+ArduinoLogger & operator << (ostream & s, ArduinoLogger & (*pf)(ArduinoLogger & logger))
 {
-	return pf ((ArduinoLogger&) s);
+	return pf ((ArduinoLogger &) s);
 }
 
-ArduinoLogger &operator << (ArduinoLogger &os, const npo &arg)
+ArduinoLogger & operator << (ArduinoLogger & os, const npo & arg)
 {
 	LogOutput * output = os.getLogOutputFromStream (arg.output);
 
@@ -202,7 +202,7 @@ ArduinoLogger &operator << (ArduinoLogger &os, const npo &arg)
 	return os;
 }
 
-ArduinoLogger &operator << (ArduinoLogger &os, const dsb &arg)
+ArduinoLogger & operator << (ArduinoLogger & os, const dsb & arg)
 {
 	LogOutput * output = os.getLogOutputFromStream (arg.output);
 
@@ -212,7 +212,8 @@ ArduinoLogger &operator << (ArduinoLogger &os, const dsb &arg)
 	return os;
 }
 
-ArduinoLogger& endl (ArduinoLogger& logger)
+// End of line
+ArduinoLogger & endl (ArduinoLogger & logger)
 {
 	logger.put ('\n');
 	logger.setPrefixOnNextPrint (true);
@@ -222,14 +223,16 @@ ArduinoLogger& endl (ArduinoLogger& logger)
 	return logger;
 }
 
-ArduinoLogger& dendl (ArduinoLogger& logger)
+// Double end of line
+ArduinoLogger & dendl (ArduinoLogger & logger)
 {
 	logger.put ('\n');
 
 	return endl (logger);
 }
 
-ArduinoLogger& np (ArduinoLogger& logger)
+// Do not display prefix for the current line
+ArduinoLogger & np (ArduinoLogger & logger)
 {
 	logger.setPrefixOnNextPrint (false);
 

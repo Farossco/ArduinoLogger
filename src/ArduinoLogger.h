@@ -51,8 +51,9 @@ typedef struct LogOutput
 	bool    prefixEnabled;
 	bool    dateEnabled;
 	bool    levelNameEnabled;
-	bool    enabled;
+	bool    disabled;
 	bool    tempDisabled;
+	inline bool enabled (){ return !disabled && !tempDisabled; }
 } LogOutput;
 
 // Do not display prefix for the current line and specified output
@@ -128,8 +129,8 @@ private:
 	const char * debugLevelName (uint8_t debugLevel);
 	void printPrefix (uint8_t index);
 	void setPrefixOnNextPrint (bool prefixOnNextPrint) const;
-	void setNDisplayedOutputs () const;
-	void setAllDisplayIndex () const;
+	void updateNDisplayed () const;
+	void updateDisplayIndex () const;
 	void resetTempDisabled () const;
 
 	const uint8_t _levelToOutput; // The level that needs to be output by the instance

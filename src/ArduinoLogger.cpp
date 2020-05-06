@@ -72,10 +72,10 @@ void ArduinoLogger::enable (Print & stream) const
 	LogOutput * output = getLogOutputFromStream (stream);
 
 	if (output != NULL)
-		output->enabled = true;
+		output->disabled = false;
 
-	setAllDisplayIndex();
-	setNDisplayedOutputs();
+	updateDisplayIndex();
+	updateNDisplayed();
 }
 
 void ArduinoLogger::disable (Print & stream) const
@@ -83,10 +83,10 @@ void ArduinoLogger::disable (Print & stream) const
 	LogOutput * output = getLogOutputFromStream (stream);
 
 	if (output != NULL)
-		output->enabled = false;
+		output->disabled = true;
 
-	setAllDisplayIndex();
-	setNDisplayedOutputs();
+	updateDisplayIndex();
+	updateNDisplayed();
 }
 
 void ArduinoLogger::enablePrefix (Print & stream) const
@@ -156,7 +156,7 @@ bool ArduinoLogger::isEnabled (Print & stream, int level) const
 	if (!output)
 		return false;
 
-	return output->enabled && output->level >= level;
+	return output->enabled() && output->level >= level;
 }
 
 LogOutput * ArduinoLogger::getLogOutputFromStream (Print & stream) const
@@ -176,11 +176,11 @@ void ArduinoLogger::initLogOutput (LogOutput * output, Print & stream, uint8_t l
 	output->prefixOnNextPrint = prefixEnabled;
 	output->dateEnabled       = true;
 	output->levelNameEnabled  = true;
-	output->enabled           = true;
+	output->disabled          = false;
 	output->tempDisabled      = false;
 
-	setAllDisplayIndex();
-	setNDisplayedOutputs();
+	updateDisplayIndex();
+	updateNDisplayed();
 }
 
 void ArduinoLogger::setflags ()
@@ -209,6 +209,9 @@ ArduinoLogger & operator << (ArduinoLogger & os, const dsb & arg)
 
 	if (output != NULL)
 		output->tempDisabled = true;
+
+	os.updateDisplayIndex();
+	os.updateNDisplayed();
 
 	return os;
 }
@@ -266,7 +269,7 @@ void ArduinoLogger::putstr (const char * str)
 {
 	for (uint8_t i = 0; i < _nOutputs; i++)
 	{
-		if (!_outputs[i].tempDisabled && _outputs[i].enabled && _outputs[i].level >= _levelToOutput)
+		if (!_outputs[i].enabled() && _outputs[i].level >= _levelToOutput)
 		{
 			printPrefix (i);
 			_outputs[i].stream->write (str);
@@ -338,28 +341,40 @@ void ArduinoLogger::setPrefixOnNextPrint (bool prefixOnNextPrint) const
 		_outputs[i].prefixOnNextPrint = prefixOnNextPrint;
 }
 
-void ArduinoLogger::setNDisplayedOutputs () const
+void ArduinoLogger::updateNDisplayed () const
 {
 	_nDisplayed = 0;
 
 	for (uint8_t i = 0; i < _nOutputs; i++)
-		if (_outputs[i].enabled)
+		if (_outputs[i].enabled())
 			_nDisplayed++;
 }
 
-void ArduinoLogger::setAllDisplayIndex () const
+void ArduinoLogger::updateDisplayIndex () const
 {
 	uint8_t n = 0;
 
 	for (uint8_t i = 0; i <= _nOutputs; i++)
-		if (_outputs[i].enabled)
+		if (_outputs[i].enabled())
 			_outputs[i].displayIndex = ++n;
 }
 
 void ArduinoLogger::resetTempDisabled () const
 {
+	bool flag = false;
+
 	for (uint8_t i = 0; i < _nOutputs; i++)
+	{
+		flag |= _outputs[i].tempDisabled;
+
 		_outputs[i].tempDisabled = false;
+	}
+
+	if (flag)
+	{
+		updateDisplayIndex();
+		updateNDisplayed();
+	}
 }
 
 const char * ArduinoLogger::debugLevelName (uint8_t debugLevel)

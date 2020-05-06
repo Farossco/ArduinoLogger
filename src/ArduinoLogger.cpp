@@ -28,6 +28,7 @@
 LogOutput * ArduinoLogger::_outputs = NULL;
 uint8_t ArduinoLogger::_nOutputs    = 0;
 uint8_t ArduinoLogger::_nDisplayed  = 0;
+char ArduinoLogger::clock[30];
 
 ArduinoLogger::ArduinoLogger() : _levelToOutput (LOG_LEVEL_SILENT)
 { }

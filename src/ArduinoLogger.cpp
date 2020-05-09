@@ -354,7 +354,7 @@ void ArduinoLogger::updateDisplayIndex () const
 {
 	uint8_t n = 0;
 
-	for (uint8_t i = 0; i <= _nOutputs; i++)
+	for (uint8_t i = 0; i < _nOutputs; i++)
 		if (_outputs[i].enabled())
 			_outputs[i].displayIndex = ++n;
 }

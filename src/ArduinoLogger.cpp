@@ -269,7 +269,7 @@ void ArduinoLogger::putstr (const char * str)
 {
 	for (uint8_t i = 0; i < _nOutputs; i++)
 	{
-		if (!_outputs[i].enabled() && _outputs[i].level >= _levelToOutput)
+		if (_outputs[i].enabled() && _outputs[i].level >= _levelToOutput)
 		{
 			printPrefix (i);
 			_outputs[i].stream->write (str);

@@ -15,6 +15,12 @@ This library allows you to easily add logging to your program. It is mainly made
 ## Tested for
 * Arduino Mega
 * ESP8266
+* ESP32
+
+## Available platforms
+* Atmel AVR
+* ESP32
+* ESP8266
 
 ## Installation
 ### PlatformIO

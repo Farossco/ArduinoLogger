@@ -25,15 +25,15 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef ostream_h
-#define ostream_h
+#ifndef AL_OSTREAM_H
+#define AL_OSTREAM_H
 
 /**
  * \file
  * \brief \ref ostream class
  */
 #include "Arduino.h"
-#include <ios>
+#include <AL_ios.h>
 // ==============================================================================
 
 /**

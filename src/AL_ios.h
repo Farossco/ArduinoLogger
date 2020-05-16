@@ -25,8 +25,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef ios_h
-#define ios_h
+#ifndef AL_IOS_H
+#define AL_IOS_H
 #include <stdint.h>
 
 /**

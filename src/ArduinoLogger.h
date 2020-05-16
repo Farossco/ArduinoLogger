@@ -23,17 +23,12 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef LOGGER_H
-#define LOGGER_H
+#ifndef ARDUINOLOGGER_H
+#define ARDUINOLOGGER_H
 
 #include <Arduino.h>
 #include <TimeLib.h>
-#include <ostream>
-
-// If you enable these features, you need to have SdCard library installed
-#if defined(LOGGER_SD_FEATURES)
-# include "SdCard.h"
-#endif
+#include <AL_ostream.h>
 
 #define LOG_LEVEL_SILENT  0
 #define LOG_LEVEL_ERROR   1
